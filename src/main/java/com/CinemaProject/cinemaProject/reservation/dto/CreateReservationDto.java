@@ -23,4 +23,5 @@ public class CreateReservationDto {
     UUID movieId;
     UUID cinemaHallId;
     Status status;
+    Integer seatNumber;
 }

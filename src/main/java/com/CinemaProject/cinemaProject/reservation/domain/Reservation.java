@@ -1,7 +1,6 @@
 package com.CinemaProject.cinemaProject.reservation.domain;
 
-import com.CinemaProject.cinemaProject.cinemaHall.domain.CinemaHall;
-import com.CinemaProject.cinemaProject.movie.domain.Movie;
+import com.CinemaProject.cinemaProject.reservation.dto.ReservationDto;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -12,6 +11,8 @@ import java.util.UUID;
 @Table(name="reservation")
 @Builder(toBuilder = true)
 @FieldDefaults(level = AccessLevel.PRIVATE)
+@Setter
+@Getter
 public class Reservation {
     @Id
     UUID reservationId;
@@ -22,8 +23,19 @@ public class Reservation {
     String phoneNumber;
     String email;
     Integer seatNumber;
-    @OneToOne
-    Movie movie;
-    @OneToOne
-    CinemaHall cinemaHall;
+    UUID movieId;
+    UUID cinemaHallId;
+
+    ReservationDto dto() {
+        return ReservationDto.builder()
+                .reservationId(reservationId)
+                .cinemaHallId(cinemaHallId)
+                .clientName(clientName)
+                .movieId(movieId)
+                .clientSurname(clientSurname)
+                .email(email)
+                .phoneNumber(phoneNumber)
+                .status(status)
+                .build();
+    }
 }

@@ -3,6 +3,7 @@ package com.CinemaProject.cinemaProject.reservation;
 import com.CinemaProject.cinemaProject.movie.dto.CreateMovieDto;
 import com.CinemaProject.cinemaProject.movie.dto.MovieDto;
 import com.CinemaProject.cinemaProject.reservation.domain.ReservationFacade;
+import com.CinemaProject.cinemaProject.reservation.domain.Status;
 import com.CinemaProject.cinemaProject.reservation.dto.CreateReservationDto;
 import com.CinemaProject.cinemaProject.reservation.dto.ReservationDto;
 import com.CinemaProject.cinemaProject.reservation.dto.UpdateReservationDto;
@@ -33,8 +34,8 @@ public class ReservationController {
     }
 
     @PatchMapping("/reserved/{reservationId}")
-    ResponseEntity<UpdateReservationDto> setReserved(@PathVariable UUID reservationId) {
-        return ResponseEntity.ok(reservationFacade.setReserved(reservationId));
+    ResponseEntity<ReservationDto> updateStatus(@PathVariable UUID reservationId) {
+        return ResponseEntity.ok(reservationFacade.updateStatus(reservationId, Status.RESERVED));
     }
 
     @PatchMapping("/reservationDeclined/{reservationId}")
@@ -43,7 +44,7 @@ public class ReservationController {
     }
 
     @PatchMapping("/waitingForPayment/{reservationId}")
-    ResponseEntity<UpdateReservationDto> setWaitingForPayment(@PathVariable UUID reservationId) {
+    ResponseEntity<ReservationDto> setWaitingForPayment(@PathVariable UUID reservationId) {
         return ResponseEntity.ok(reservationFacade.setWaitingForPayment(reservationId));
     }
 }

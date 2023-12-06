@@ -17,6 +17,6 @@ public class ReservationDto {
     String clientSurname;
     String phoneNumber;
     String email;
-    Long movieId;
-    Long cinemaHallId;
+    UUID movieId;
+    UUID cinemaHallId;
 }
