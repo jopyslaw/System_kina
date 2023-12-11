@@ -8,9 +8,9 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.experimental.FieldDefaults;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @AllArgsConstructor
 @Builder
@@ -19,11 +19,20 @@ public class CinemaHallFacade {
     CinemaHallRepository cinemaHallRepository;
 
     public CinemaHallDto createCinemaHall(CreateCinemaHallDto createCinemaHallDto) {
-        return CinemaHallDto.builder().build();
+        CinemaHall cinemaHall = CinemaHall.builder()
+                .cinemaHallId(UUID.randomUUID())
+                .hallName(createCinemaHallDto.getHallName())
+                .maxSeatsNumber(createCinemaHallDto.getMaxSeatsNumber())
+                .build();
+
+        return cinemaHallRepository.save(cinemaHall).dto();
     }
 
     public List<CinemaHallDto> getAllCinemaHalls() {
-        return new ArrayList<>();
+        return cinemaHallRepository.findAll().stream()
+                .map(CinemaHall::dto)
+                .collect(Collectors.toList());
+
     }
 
     public UpdateCinemaHallDto updateCinemaHallDto(UpdateCinemaHallDto updateCinemaHallDto) {

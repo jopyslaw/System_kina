@@ -8,9 +8,7 @@ import io.camunda.zeebe.client.api.response.ActivatedJob;
 import io.camunda.zeebe.client.api.worker.JobClient;
 import io.camunda.zeebe.spring.client.annotation.JobWorker;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -18,19 +16,21 @@ import java.util.UUID;
 
 @Component
 public class ReservationApplicationAdapter {
-    //ReservationFacade reservationFacade;
- /*   @Autowired
-    ReservationApplicationAdapter (ReservationFacade reservationFacade) {
-        //this.reservationFacade = reservationFacade;
-    }*/
+    ReservationFacade reservationFacade;
 
-    /*@JobWorker(type = "CheckIfSeatIsFree")
+   @Autowired
+    ReservationApplicationAdapter (ReservationFacade reservationFacade) {
+        this.reservationFacade = reservationFacade;
+
+    }
+
+    @JobWorker(type = "checkIfSeatIsFree")
     public Map<String, Object> checkIfSeatIsFree(final JobClient client, final ActivatedJob job) {
         HashMap<String, Object> jobResultVariables = new HashMap<>();
 
-        //boolean isSeatFree = reservationFacade.findReservationBySeatNumber((Integer) job.getVariablesAsMap().get("seatNumber")).isEmpty();
+        boolean isSeatFree = reservationFacade.findReservationBySeatNumber((Integer) job.getVariablesAsMap().get("seatNumber")).isEmpty();
 
-        /*if (!isSeatFree) {
+        if (!isSeatFree) {
             jobResultVariables.put("freeSeat", false);
 
         } else {
@@ -44,50 +44,66 @@ public class ReservationApplicationAdapter {
     public Map<String,Object> addNewReservation(final JobClient jobClient, final ActivatedJob job) {
         HashMap<String, Object> jobResultVariables = new HashMap<>();
 
-        CreateReservationDto reservation = CreateReservationDto.builder().email((String) job.getVariablesAsMap().get("email")).cinemaHallId((UUID) job.getVariablesAsMap().get("cinemaHallId")).clientName((String) job.getVariablesAsMap().get("clientName")).clientSurname((String) job.getVariablesAsMap().get("clientSurname")).movieId((UUID) job.getVariablesAsMap().get("movieId")).phoneNumber((String) job.getVariablesAsMap().get("phoneNumber")).status(Status.RESERVATION).build();
-        //ReservationDto reservationDto = reservationFacade.createReservation(reservation);
-        //jobResultVariables.put("reservationApplication", reservationDto);
+        CreateReservationDto reservation = CreateReservationDto.builder()
+                .email((String) job.getVariablesAsMap().get("email"))
+                .cinemaHallId((UUID) job.getVariablesAsMap().get("cinemaHallId"))
+                .clientName((String) job.getVariablesAsMap().get("clientName"))
+                .clientSurname((String) job.getVariablesAsMap().get("clientSurname"))
+                .movieId((UUID) job.getVariablesAsMap().get("movieId"))
+                .phoneNumber((String) job.getVariablesAsMap().get("phoneNumber"))
+                .status(Status.RESERVATION)
+                .build();
+        ReservationDto reservationDto = reservationFacade.createReservation(reservation);
+        jobResultVariables.put("reservationApplication", reservationDto);
 
         return jobResultVariables;
     }
 
-    @JobWorker
-    public Map<String,Object> paymentForSeat(final JobClient client, final ActivatedJob job) {
+    @JobWorker(type="checkPaymentStatus")
+    public Map<String,Object> checkPaymentStatus(final JobClient client, final ActivatedJob job) {
         HashMap<String, Object> jobResultVariables = new HashMap<>();
 
-        //Boolean paymentStatus = reservationFacade.checkPayment((UUID) job.getVariablesAsMap().get("reservationId"));
+        Boolean paymentStatus = reservationFacade.checkPayment((UUID) job.getVariablesAsMap().get("reservationId"));
 
-        //jobResultVariables.put("paymentStatus", paymentStatus);
+        jobResultVariables.put("paymentStatus", paymentStatus);
 
         return jobResultVariables;
     }
 
-    @JobWorker
+    @JobWorker(type="reservationCompleted")
     public Map<String, Object> reservationCompleted(final JobClient client, final ActivatedJob job) {
         HashMap<String, Object> jobResultVariables = new HashMap<>();
 
-        //ReservationDto reservationDto = reservationFacade.updateStatus((UUID) job.getVariablesAsMap().get("reservationId"), Status.RESERVED);
+        ReservationDto reservationDto = reservationFacade.updateStatus((UUID) job.getVariablesAsMap().get("reservationId"), Status.RESERVED);
 
-        //jobResultVariables.put("reservationEnd", reservationDto);
+        jobResultVariables.put("reservationEnd", reservationDto);
 
         return jobResultVariables;
     }
 
-    @JobWorker
+    @JobWorker(type="reservationCancelled")
     public Map<String,Object> reservationCancelled(final JobClient client, final ActivatedJob job) {
         HashMap<String, Object> jobResultVariables = new HashMap<>();
-        //ReservationDto reservationDto = reservationFacade.updateStatus((UUID) job.getVariablesAsMap().get("reservationId"), Status.RESERVATION_DECLINED);
+        ReservationDto reservationDto = reservationFacade.updateStatus((UUID) job.getVariablesAsMap().get("reservationId"), Status.RESERVATION_DECLINED);
 
-        //jobResultVariables.put("reservationEnd", reservationDto);
+        jobResultVariables.put("reservationEnd", reservationDto);
 
         return jobResultVariables;
     }
 
-    @JobWorker
-    public Map<String,Object> sendEmail(final JobClient client, final ActivatedJob job) {
+    @JobWorker(type="sendEmailApproved")
+    public Map<String,Object> sendEmailApproved(final JobClient client, final ActivatedJob job) {
         HashMap<String, Object> jobResultVariables = new HashMap<>();
 
         return jobResultVariables;
     }
-     */
+
+
+    @JobWorker(type="sendEmailDisapproved")
+    public Map<String,Object> sendEmailDisapproved(final JobClient client, final ActivatedJob job) {
+        HashMap<String, Object> jobResultVariables = new HashMap<>();
+
+
+        return jobResultVariables;
+    }
 }

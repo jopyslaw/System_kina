@@ -2,6 +2,7 @@ package com.CinemaProject.cinemaProject.movie;
 
 import com.CinemaProject.cinemaProject.cinemaHall.dto.CinemaHallDto;
 import com.CinemaProject.cinemaProject.cinemaHall.dto.CreateCinemaHallDto;
+import com.CinemaProject.cinemaProject.movie.domain.Movie;
 import com.CinemaProject.cinemaProject.movie.domain.MovieFacade;
 import com.CinemaProject.cinemaProject.movie.dto.CreateMovieDto;
 import com.CinemaProject.cinemaProject.movie.dto.MovieDto;

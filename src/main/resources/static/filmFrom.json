@@ -1,0 +1,60 @@
+{
+  "components": [
+    {
+      "text": "Wybierz film który cię interesuje",
+      "type": "text",
+      "id": "Field_1396r3s"
+    },
+    {
+      "label": "Imię:",
+      "type": "textfield",
+      "id": "Field_10s8j1z",
+      "key": "clientName",
+      "validate": {
+        "required": true
+      }
+    },
+    {
+      "label": "Nazwisko:",
+      "type": "textfield",
+      "id": "Field_0nxld3p",
+      "key": "clientSurname",
+      "validate": {
+        "required": true
+      }
+    },
+    {
+      "label": "Email:",
+      "type": "textfield",
+      "id": "Field_0qsy8px",
+      "key": "email",
+      "validate": {
+        "validationType": "email",
+        "required": true
+      }
+    },
+    {
+      "label": "Numer telefonu:",
+      "type": "textfield",
+      "id": "Field_0qsy8px",
+      "key": "phoneNumber",
+      "validate": {
+        "required": true
+      }
+    },
+    {
+      "action": "submit",
+      "label": "Zatwierdź",
+      "type": "button",
+      "id": "Field_1ybgell",
+      "key": "field_0n5k4nc"
+    }
+  ],
+  "type": "default",
+  "id": "Form_Recruit",
+  "exporter": {
+    "name": "form-js (https://demo.bpmn.io)",
+    "version": "0.10.0"
+  },
+  "schemaVersion": 6
+}

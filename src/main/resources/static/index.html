@@ -1,0 +1,161 @@
+<html>
+<head>
+    <link
+            rel="stylesheet"
+            href="https://unpkg.com/@bpmn-io/form-js@0.7.2/dist/assets/form-js.css"
+    />
+    <style>
+        #form {
+          max-width: 800px;
+        }
+    </style>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://unpkg.com/@bpmn-io/form-js@0.10.0/dist/form-viewer.umd.js"></script>
+</head>
+
+<body>
+<div id="success"><span id="success-message"></span></div>
+<div id="form"></div>
+
+<script>
+    const make = async () => {
+      const getCinemaHalls = async () => {
+        const response = await fetch(
+          "http://localhost:8080/api/cinemaHall/all"
+        );
+        const halls = await response.json();
+        return halls;
+      };
+
+      const getMovies = async () => {
+        const response = await fetch("http://localhost:8080/api/movie/all");
+        const halls = await response.json();
+        return halls;
+      };
+
+      const movies = await getMovies();
+      const halls = await getCinemaHalls();
+
+      const schema = {
+        components: [
+          {
+            text: "Wybierz film ktory cie interesuje",
+            type: "text",
+            id: "Field_1396r3s",
+          },
+          {
+            label: "Imie:",
+            type: "textfield",
+            id: "Field_10s8j1z",
+            key: "clientName",
+            validate: {
+              required: true,
+            },
+          },
+          {
+            label: "Nazwisko:",
+            type: "textfield",
+            id: "Field_0nxld3p",
+            key: "clientSurname",
+            validate: {
+              required: true,
+            },
+          },
+          {
+            label: "Email:",
+            type: "textfield",
+            id: "Field_0qsy8px",
+            key: "email",
+            validate: {
+              validationType: "email",
+              required: true,
+            },
+          },
+          {
+            label: "Numer telefonu:",
+            type: "textfield",
+            id: "Field_1qsy8px",
+            key: "phoneNumber",
+            validate: {
+              required: true,
+            },
+          },
+          {
+            type: "select",
+            label: "Wybierz sale",
+            id: "Field_2qsy8px",
+            name: "selectOption",
+            key: "cinemaHallId",
+            values: halls.map((hall) => ({
+              label: hall.hallName,
+              value: hall.cinemaHallId,
+            })),
+          },
+          {
+            type: "select",
+            label: "Wybierz miejsce",
+            id: "Field_9qsy8px",
+            name: "selectOption",
+            key: "seat",
+            values: Array.from(Array(halls[0].maxSeatsNumber).keys())
+              .map((seat) => ({
+                label: seat,
+                value: seat,
+              })),
+          },
+          {
+            type: "select",
+            label: "Wybierz film",
+            id: "Field_3qsy8px",
+            name: "selectOption",
+            key: "movieId",
+            values: movies.map((movie) => ({
+              label: movie.title,
+              value: movie.movieId,
+            })),
+          },
+          {
+            action: "submit",
+            label: "Zatwierdz",
+            type: "button",
+            id: "Field_1ybgell",
+            key: "field_0n5k4nc",
+          },
+        ],
+        type: "default",
+        id: "Cinema_reservation",
+        exporter: {
+          name: "form-js (https://demo.bpmn.io)",
+          version: "0.10.0",
+        },
+        schemaVersion: 6,
+      };
+
+      const container = document.querySelector("#form");
+
+      FormViewer.createForm({
+        container,
+        schema,
+      }).then(function (form) {
+        console.log(form);
+        form.on("submit", (event) => {
+          console.log("Form <submit>", event, event.data);
+
+          $.ajax("/api/reservation/start", {
+            data: JSON.stringify(event.data),
+            contentType: "application/json",
+            type: "POST",
+            success: function (data) {
+              form.reset();
+              $("#success-message").html(
+                "<b>Aplikacja zarejestrowana. Decyzja zostanie przekazana na podany adres email.</b>"
+              );
+            },
+          });
+        });
+      });
+    };
+    make();
+</script>
+</body>
+</html>

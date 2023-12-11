@@ -1,5 +1,6 @@
 package com.CinemaProject.cinemaProject.cinemaHall;
 
+import com.CinemaProject.cinemaProject.cinemaHall.domain.CinemaHall;
 import com.CinemaProject.cinemaProject.cinemaHall.domain.CinemaHallFacade;
 import com.CinemaProject.cinemaProject.cinemaHall.dto.CinemaHallDto;
 import com.CinemaProject.cinemaProject.cinemaHall.dto.CreateCinemaHallDto;

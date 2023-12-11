@@ -7,8 +7,9 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.experimental.FieldDefaults;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
+import java.util.stream.Collectors;
 
 @AllArgsConstructor
 @Builder
@@ -17,11 +18,17 @@ public class MovieFacade {
     MovieRepository movieRepository;
 
     public MovieDto createMovie(CreateMovieDto createMovieDto) {
-        return MovieDto.builder().build();
+        Movie movie = Movie.builder()
+                .movieId(UUID.randomUUID())
+                .isActive(createMovieDto.getIsActive())
+                .price(createMovieDto.getPrice())
+                .title(createMovieDto.getTitle())
+                .build();
+        return movieRepository.save(movie).dto();
     }
 
     public List<MovieDto> getAllMovies() {
-        return new ArrayList<>();
+        return movieRepository.findAll().stream().map(Movie::dto).collect(Collectors.toList());
     }
 
     public void deleteMovie() {
