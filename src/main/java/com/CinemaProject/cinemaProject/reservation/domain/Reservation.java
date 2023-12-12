@@ -13,6 +13,8 @@ import java.util.UUID;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Setter
 @Getter
+@AllArgsConstructor
+@NoArgsConstructor
 public class Reservation {
     @Id
     UUID reservationId;

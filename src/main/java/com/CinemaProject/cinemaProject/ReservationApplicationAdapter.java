@@ -7,6 +7,8 @@ import com.CinemaProject.cinemaProject.reservation.dto.ReservationDto;
 import io.camunda.zeebe.client.api.response.ActivatedJob;
 import io.camunda.zeebe.client.api.worker.JobClient;
 import io.camunda.zeebe.spring.client.annotation.JobWorker;
+import io.camunda.zeebe.spring.client.annotation.ZeebeWorker;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -15,17 +17,13 @@ import java.util.Map;
 import java.util.UUID;
 
 @Component
+@AllArgsConstructor
 public class ReservationApplicationAdapter {
     ReservationFacade reservationFacade;
 
-   @Autowired
-    ReservationApplicationAdapter (ReservationFacade reservationFacade) {
-        this.reservationFacade = reservationFacade;
-
-    }
-
     @JobWorker(type = "checkIfSeatIsFree")
     public Map<String, Object> checkIfSeatIsFree(final JobClient client, final ActivatedJob job) {
+       System.out.println("Process started 2");
         HashMap<String, Object> jobResultVariables = new HashMap<>();
 
         boolean isSeatFree = reservationFacade.findReservationBySeatNumber((Integer) job.getVariablesAsMap().get("seatNumber")).isEmpty();
@@ -46,10 +44,10 @@ public class ReservationApplicationAdapter {
 
         CreateReservationDto reservation = CreateReservationDto.builder()
                 .email((String) job.getVariablesAsMap().get("email"))
-                .cinemaHallId((UUID) job.getVariablesAsMap().get("cinemaHallId"))
+                .cinemaHallId(UUID.fromString((String) job.getVariablesAsMap().get("cinemaHallId")))
                 .clientName((String) job.getVariablesAsMap().get("clientName"))
                 .clientSurname((String) job.getVariablesAsMap().get("clientSurname"))
-                .movieId((UUID) job.getVariablesAsMap().get("movieId"))
+                .movieId(UUID.fromString((String) job.getVariablesAsMap().get("movieId")))
                 .phoneNumber((String) job.getVariablesAsMap().get("phoneNumber"))
                 .status(Status.RESERVATION)
                 .build();
@@ -106,4 +104,6 @@ public class ReservationApplicationAdapter {
 
         return jobResultVariables;
     }
+
+
 }

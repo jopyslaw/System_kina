@@ -44,11 +44,13 @@ public class ReservationFacade {
     }
 
     public ReservationDto updateStatus(UUID reservationId, Status status) {
-        Reservation reservation = reservationRepository.getReferenceById(reservationId);
+        /*Reservation reservation = reservationRepository.getReferenceById(reservationId);
 
         reservation.setStatus(status);
         return reservationRepository.save(reservation).dto();
 
+         */
+        return ReservationDto.builder().build();
     }
 
     public ReservationDto setWaitingForPayment(UUID reservationId) {

@@ -1,10 +1,11 @@
 package com.CinemaProject.cinemaProject.movie.domain;
 
 import com.CinemaProject.cinemaProject.movie.dto.MovieDto;
-import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import java.util.UUID;
 
 @Entity

@@ -2,7 +2,9 @@ package com.CinemaProject.cinemaProject.cinemaHall.domain;
 
 
 import com.CinemaProject.cinemaProject.cinemaHall.dto.CinemaHallDto;
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
