@@ -11,15 +11,13 @@ public class Task {
 
     private String assignee;
 
+    private String phoneNumber;
+
     private String creationTime;
 
     private TaskState taskState;
 
-    private List<String> candidateGroups;
-
     private List<String> sortValues;
-
-    private Boolean isFirst;
 
     private Map<String, Object> variables;
 
@@ -83,28 +81,12 @@ public class Task {
         this.sortValues = sortValues;
     }
 
-    public Boolean getIsFirst() {
-        return isFirst;
-    }
-
-    public void setIsFirst(Boolean isFirst) {
-        this.isFirst = isFirst;
-    }
-
     public Map<String, Object> getVariables() {
         return variables;
     }
 
     public void setVariables(Map<String, Object> variables) {
         this.variables = variables;
-    }
-
-    public List<String> getCandidateGroups() {
-        return candidateGroups;
-    }
-
-    public void setCandidateGroups(List<String> candidateGroups) {
-        this.candidateGroups = candidateGroups;
     }
 
     public String getFormKey() {
@@ -121,5 +103,13 @@ public class Task {
 
     public void setProcessDefinitionId(String processDefinitionId) {
         this.processDefinitionId = processDefinitionId;
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
     }
 }

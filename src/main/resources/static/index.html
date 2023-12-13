@@ -141,6 +141,7 @@
         console.log(form);
         form.on("submit", (event) => {
           console.log("Form <submit>", event, event.data);
+          const userPhoneNumber = event.data.phoneNumber;
 
           $.ajax("/api/reservation/start", {
             data: JSON.stringify(event.data),
@@ -149,25 +150,59 @@
             success: function (data) {
               form.reset();
 
-              const isPaymentConfirmed = window.confirm(
-                "Czy płatność została zrobiona?"
-              );
-
-              if (isPaymentConfirmed) {
-                $("#success-message").html(
-                  "<b>Aplikacja zarejestrowana. Decyzja zostanie przekazana na podany adres email.</b>"
+              setTimeout(() => {
+                const isPaymentConfirmed = window.confirm(
+                  "Czy płatność została zrobiona?"
                 );
 
-                // Po zapisaniu rezerwacji, wysyłamy dodatkowe żądanie POST do innego endpointu
-                $.ajax("/api/reservation/confirmPayment", {
-                  contentType: "application/json",
-                  type: "GET",
-                  success: function (paymentData) {
-                    console.log("Potwierdzenie płatności:", paymentData);
-                    // Tutaj możesz dodać kod do obsługi potwierdzenia płatności
-                  },
-                });
-              }
+                if (isPaymentConfirmed) {
+                  $("#success-message").html(
+                    "<b>Aplikacja zarejestrowana. Decyzja zostanie przekazana na podany adres email.</b>"
+                  );
+
+                  // Po zapisaniu rezerwacji, wysyłamy dodatkowe żądanie POST do innego endpointu
+                  $.ajax("/api/reservation/confirmPayment", {
+                    contentType: "application/json",
+                    type: "GET",
+                    success: function (paymentData) {
+                      console.log("console.log", userPhoneNumber);
+                      const filterData = paymentData.items.filter((item) => {
+                        const foundItem = item.variables.find((i) => {
+                          console.log(i);
+                          if (
+                            i.name === "phoneNumber" &&
+                            i.value === userPhoneNumber
+                          ) {
+                            console.log("work");
+                            return true;
+                          }
+
+                          return false;
+                        });
+
+                        if (foundItem) {
+                          return true;
+                        } else return false;
+                      });
+                      console.log("filterData", filterData);
+                      console.log("Potwierdzenie płatności:", paymentData);
+
+                      if (filterData) {
+                        console.log(filterData[0].id);
+                        $.ajax(
+                          `/api/reservation/makePayment/${filterData[0].id}`,
+                          {
+                            contentType: "application/json",
+                            type: "POST",
+                            data: JSON.stringify(filterData[0].variables)
+                          }
+                        );
+                      }
+                      // Tutaj możesz dodać kod do obsługi potwierdzenia płatności
+                    },
+                  });
+                }
+              }, 10000);
             },
           });
         });

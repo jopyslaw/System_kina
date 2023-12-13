@@ -42,13 +42,16 @@ public class ReservationController {
     @PostMapping("/start")
     public void startProcessInstance(@RequestBody Map<String,Object> variables) {
 
+        System.out.println("Process Started" + variables);
+
         zeebeClient.newCreateInstanceCommand()
                 .bpmnProcessId("cinema-reservation-process")
                 .latestVersion()
                 .variables(variables)
                 .send();
 
-        System.out.println("Process Started" + variables);
+
+
     }
 
     @GetMapping("/confirmPayment")
@@ -59,9 +62,11 @@ public class ReservationController {
         try {
             tasks = taskListService.getTaskList(TaskState.CREATED, null);
 
-            for(Task task : tasks) {
+            System.out.println(tasks);
+
+            /*for(Task task : tasks) {
                 this.completeTask(task.getId(), Map.of("paymentMade", "yes"));
-            }
+            }*/
 
         } catch (Exception e) {
 
@@ -95,9 +100,10 @@ public class ReservationController {
         return ResponseEntity.ok(reservationFacade.setWaitingForPayment(reservationId));
     }
 
-    @PostMapping("/complete/{taskId}")
+    @PostMapping("/makePayment/{taskId}")
     public void completeTask(@PathVariable String taskId, @RequestBody Map<String, Object> variables)
             throws TaskListException {
+            System.out.println(variables);
             variables.put("paymentMade", "yes");
 
 
