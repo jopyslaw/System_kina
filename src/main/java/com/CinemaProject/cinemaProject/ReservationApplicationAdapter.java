@@ -100,7 +100,7 @@ public class ReservationApplicationAdapter {
 
         String email = (String)job.getVariablesAsMap().get("email");
 
-        mailSenderService.sendEmail(email, "Rezerwacja udana", "Twoja rezerwacja została potwierdzona. Dziekujemu i życzymy udanego seansu :)");
+        //mailSenderService.sendEmail(email, "Rezerwacja udana", "Twoja rezerwacja została potwierdzona. Dziekujemu i życzymy udanego seansu :)");
 
         return jobResultVariables;
     }
@@ -112,7 +112,7 @@ public class ReservationApplicationAdapter {
 
         String email = (String)job.getVariablesAsMap().get("email");
 
-        mailSenderService.sendEmail(email, "Rezerwacja anulowana", "Twoja rezerwacja została anulowana. Spróbuj ponownie");
+        //mailSenderService.sendEmail(email, "Rezerwacja anulowana", "Twoja rezerwacja została anulowana. Spróbuj ponownie");
         return jobResultVariables;
     }
 
