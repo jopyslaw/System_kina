@@ -188,9 +188,10 @@
                       console.log("Potwierdzenie płatności:", paymentData);
 
                       if (filterData) {
-                        console.log(filterData[0].id);
+                        console.log(filterData[0]);
+                        const reservationId = filterData[0].variables.find(item => item.name === 'reservationApplication').value.reservationId
                         $.ajax(
-                          `/api/reservation/makePayment/${filterData[0].id}`,
+                          `/api/reservation/makePayment/${filterData[0].id}/${reservationId}`,
                           {
                             contentType: "application/json",
                             type: "POST",

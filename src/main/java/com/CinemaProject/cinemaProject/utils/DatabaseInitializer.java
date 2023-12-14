@@ -4,7 +4,6 @@ import com.CinemaProject.cinemaProject.cinemaHall.domain.CinemaHallFacade;
 import com.CinemaProject.cinemaProject.cinemaHall.dto.CreateCinemaHallDto;
 import com.CinemaProject.cinemaProject.movie.domain.MovieFacade;
 import com.CinemaProject.cinemaProject.movie.dto.CreateMovieDto;
-import com.CinemaProject.cinemaProject.movieHall.dto.CreateMovieHallDto;
 import lombok.AllArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;

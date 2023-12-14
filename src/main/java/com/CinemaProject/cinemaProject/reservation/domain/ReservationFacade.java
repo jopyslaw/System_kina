@@ -3,6 +3,7 @@ package com.CinemaProject.cinemaProject.reservation.domain;
 import com.CinemaProject.cinemaProject.reservation.dto.CreateReservationDto;
 import com.CinemaProject.cinemaProject.reservation.dto.ReservationDto;
 import com.CinemaProject.cinemaProject.reservation.dto.UpdateReservationDto;
+import jakarta.transaction.Transactional;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -42,19 +43,12 @@ public class ReservationFacade {
     public void deleteReservation() {
 
     }
-
+    @Transactional
     public ReservationDto updateStatus(UUID reservationId, Status status) {
-        /*Reservation reservation = reservationRepository.getReferenceById(reservationId);
+        Reservation reservation = reservationRepository.getReferenceById(reservationId);
 
         reservation.setStatus(status);
         return reservationRepository.save(reservation).dto();
-
-         */
-        return ReservationDto.builder().build();
-    }
-
-    public ReservationDto setWaitingForPayment(UUID reservationId) {
-        return ReservationDto.builder().build();
     }
 
     public UpdateReservationDto setReservationDeclined(UUID reservationId) {
@@ -65,7 +59,12 @@ public class ReservationFacade {
         return reservationRepository.findBySeatNumber(seatNumber);
     }
 
+    @Transactional
     public boolean checkPayment(UUID reservationId) {
-        return false;
+        Reservation reservation = reservationRepository.getReferenceById(reservationId);
+
+        System.out.println(reservation.getStatus());
+
+        return reservation.getStatus() == Status.PAYMENT_MADE;
     }
 }

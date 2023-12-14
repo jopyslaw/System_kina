@@ -22,10 +22,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 @RestController
 @AllArgsConstructor
@@ -95,18 +92,17 @@ public class ReservationController {
         return ResponseEntity.ok(reservationFacade.setReservationDeclined(reservationId));
     }
 
-    @PatchMapping("/waitingForPayment/{reservationId}")
-    ResponseEntity<ReservationDto> setWaitingForPayment(@PathVariable UUID reservationId) {
-        return ResponseEntity.ok(reservationFacade.setWaitingForPayment(reservationId));
-    }
 
-    @PostMapping("/makePayment/{taskId}")
-    public void completeTask(@PathVariable String taskId, @RequestBody Map<String, Object> variables)
+
+    @PostMapping("/makePayment/{taskId}/{reservationId}")
+    public void completeTask(@PathVariable String taskId, @PathVariable String reservationId)
             throws TaskListException {
+            Map<String,Object> variables = new HashMap<>();
             System.out.println(variables);
-            variables.put("paymentMade", "yes");
+            variables.put("paymentMade", true);
+        System.out.println("WORKING");
 
-
+        reservationFacade.updateStatus(UUID.fromString(reservationId), Status.PAYMENT_MADE);
         taskListService.completeTask(taskId, variables);
     }
 
