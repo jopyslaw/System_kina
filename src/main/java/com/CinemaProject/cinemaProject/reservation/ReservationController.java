@@ -38,9 +38,6 @@ public class ReservationController {
 
     @PostMapping("/start")
     public void startProcessInstance(@RequestBody Map<String,Object> variables) {
-
-        System.out.println("Process Started" + variables);
-
         zeebeClient.newCreateInstanceCommand()
                 .bpmnProcessId("cinema-reservation-process")
                 .latestVersion()
@@ -58,13 +55,6 @@ public class ReservationController {
 
         try {
             tasks = taskListService.getTaskList(TaskState.CREATED, null);
-
-            System.out.println(tasks);
-
-            /*for(Task task : tasks) {
-                this.completeTask(task.getId(), Map.of("paymentMade", "yes"));
-            }*/
-
         } catch (Exception e) {
 
         }
@@ -98,12 +88,20 @@ public class ReservationController {
     public void completeTask(@PathVariable String taskId, @PathVariable String reservationId)
             throws TaskListException {
             Map<String,Object> variables = new HashMap<>();
-            System.out.println(variables);
             variables.put("paymentMade", true);
-        System.out.println("WORKING");
 
         reservationFacade.updateStatus(UUID.fromString(reservationId), Status.PAYMENT_MADE);
         taskListService.completeTask(taskId, variables);
     }
 
+
+    @PostMapping("/makePaymentFailed/{taskId}/{reservationId}")
+    public void completeTaskFailed(@PathVariable String taskId, @PathVariable String reservationId)
+            throws TaskListException {
+        Map<String,Object> variables = new HashMap<>();
+        variables.put("paymentMade", false);
+
+        reservationFacade.updateStatus(UUID.fromString(reservationId), Status.PAYMENT_MADE);
+        taskListService.completeTask(taskId, variables);
+    }
 }

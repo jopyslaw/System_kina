@@ -1,6 +1,6 @@
 package com.CinemaProject.cinemaProject;
 
-import com.CinemaProject.cinemaProject.email.MailSenderService;
+import com.CinemaProject.cinemaProject.email.EmailSenderService;
 import com.CinemaProject.cinemaProject.reservation.domain.ReservationFacade;
 import com.CinemaProject.cinemaProject.reservation.domain.Status;
 import com.CinemaProject.cinemaProject.reservation.dto.CreateReservationDto;
@@ -8,9 +8,7 @@ import com.CinemaProject.cinemaProject.reservation.dto.ReservationDto;
 import io.camunda.zeebe.client.api.response.ActivatedJob;
 import io.camunda.zeebe.client.api.worker.JobClient;
 import io.camunda.zeebe.spring.client.annotation.JobWorker;
-import io.camunda.zeebe.spring.client.annotation.ZeebeWorker;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
@@ -21,14 +19,14 @@ import java.util.UUID;
 @AllArgsConstructor
 public class ReservationApplicationAdapter {
     ReservationFacade reservationFacade;
-    MailSenderService mailSenderService;
+    EmailSenderService emailSender;
 
     @JobWorker(type = "checkIfSeatIsFree")
     public Map<String, Object> checkIfSeatIsFree(final JobClient client, final ActivatedJob job) {
-       System.out.println("Process started 2");
+
         HashMap<String, Object> jobResultVariables = new HashMap<>();
 
-        boolean isSeatFree = reservationFacade.findReservationBySeatNumber((Integer) job.getVariablesAsMap().get("seatNumber")).isEmpty();
+        boolean isSeatFree = reservationFacade.findReservationBySeatNumber(Integer.parseInt(job.getVariablesAsMap().get("seat").toString())).isEmpty();
 
         if (!isSeatFree) {
             jobResultVariables.put("freeSeat", false);
@@ -65,7 +63,7 @@ public class ReservationApplicationAdapter {
     @JobWorker(type="checkPaymentStatus")
     public Map<String,Object> checkPaymentStatus(final JobClient client, final ActivatedJob job) {
         HashMap<String, Object> jobResultVariables = new HashMap<>();
-        System.out.println(job.getVariablesAsMap().get("reservationId"));
+
         Boolean paymentStatus = reservationFacade.checkPayment(UUID.fromString((String) job.getVariablesAsMap().get("reservationId")));
 
         jobResultVariables.put("paymentStatus", paymentStatus);
@@ -87,7 +85,7 @@ public class ReservationApplicationAdapter {
     @JobWorker(type="reservationCancelled")
     public Map<String,Object> reservationCancelled(final JobClient client, final ActivatedJob job) {
         HashMap<String, Object> jobResultVariables = new HashMap<>();
-        ReservationDto reservationDto = reservationFacade.updateStatus(UUID.fromString((String)job.getVariablesAsMap().get("reservationId")), Status.RESERVATION_DECLINED);
+        ReservationDto reservationDto = reservationFacade.updateStatus(UUID.fromString((String) job.getVariablesAsMap().get("reservationId")), Status.RESERVATION_DECLINED);
 
         jobResultVariables.put("reservationEnd", reservationDto);
 
@@ -100,7 +98,15 @@ public class ReservationApplicationAdapter {
 
         String email = (String)job.getVariablesAsMap().get("email");
 
-        //mailSenderService.sendEmail(email, "Rezerwacja udana", "Twoja rezerwacja została potwierdzona. Dziekujemu i życzymy udanego seansu :)");
+
+        String body = String.format("Twoja rezerwacja została potwierdzona. Zapraszamy na seans."+
+                "Sala: %s, " +
+                "Miejsce: %s"+
+                "Tytuł filmu: %s",
+                job.getVariablesAsMap().get("cinemaHallName").toString(), job.getVariablesAsMap().get("seat").toString(), job.getVariablesAsMap().get("movieName").toString());
+        emailSender.sendSimpleEmail(email,
+                "Kino",
+                body);
 
         return jobResultVariables;
     }
@@ -112,7 +118,14 @@ public class ReservationApplicationAdapter {
 
         String email = (String)job.getVariablesAsMap().get("email");
 
-        //mailSenderService.sendEmail(email, "Rezerwacja anulowana", "Twoja rezerwacja została anulowana. Spróbuj ponownie");
+        String body = String.format("Twoja rezerwacja została anulowana. Przepraszamy za niedogodności."+
+                        "Sala: %s, " +
+                        "Miejsce: %s"+
+                        "Tytuł filmu: %s",
+                job.getVariablesAsMap().get("cinemaHallName").toString(), job.getVariablesAsMap().get("seat").toString(), job.getVariablesAsMap().get("movieName").toString());
+        emailSender.sendSimpleEmail(email,
+                "Kino",
+                body);
         return jobResultVariables;
     }
 
