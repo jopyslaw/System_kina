@@ -43,9 +43,6 @@ public class ReservationController {
                 .latestVersion()
                 .variables(variables)
                 .send();
-
-
-
     }
 
     @GetMapping("/confirmPayment")
