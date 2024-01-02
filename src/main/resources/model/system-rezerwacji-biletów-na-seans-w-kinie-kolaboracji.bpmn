@@ -24,7 +24,7 @@
         <flowNodeRef>Activity_0k2cbjc</flowNodeRef>
       </lane>
     </laneSet>
-    <serviceTask id="Activity_1ljj258" name="Sprawdź czy rezerwacja przebiegła pomyślnie">
+    <serviceTask id="Activity_1ljj258" name="Sprawdź czy rezerwacja wstępna przebiegła pomyślnie">
       <extensionElements>
         <zeebe:taskDefinition type="checkPaymentStatus" />
       </extensionElements>
@@ -98,7 +98,7 @@
       <outgoing>Flow_1i1q8i3</outgoing>
       <outgoing>Flow_0lqwide</outgoing>
     </exclusiveGateway>
-    <serviceTask id="Activity_1w7dhrm" name="Rezerwacja wybranego miejsa">
+    <serviceTask id="Activity_1w7dhrm" name="Wstępna rezerwacja wybranego miejsca">
       <extensionElements>
         <zeebe:taskDefinition type="addNewReservation" />
       </extensionElements>
@@ -145,12 +145,12 @@
         <omgdc:Bounds x="160" y="50" width="2400" height="830" />
         <bpmndi:BPMNLabel />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Lane_133n91g_di" bpmnElement="Lane_133n91g" isHorizontal="true">
-        <omgdc:Bounds x="190" y="50" width="2370" height="415" />
-        <bpmndi:BPMNLabel />
-      </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Lane_0iqjcza_di" bpmnElement="Lane_0iqjcza" isHorizontal="true">
         <omgdc:Bounds x="190" y="465" width="2370" height="415" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_133n91g_di" bpmnElement="Lane_133n91g" isHorizontal="true">
+        <omgdc:Bounds x="190" y="50" width="2370" height="415" />
         <bpmndi:BPMNLabel />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Activity_1ljj258_di" bpmnElement="Activity_1ljj258">
